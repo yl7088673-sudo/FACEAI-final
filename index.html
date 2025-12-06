@@ -356,47 +356,14 @@
         const resultsList = document.getElementById('resultsList');
 
         // AI 모델 초기화
-        async function initModel() {
-            try {
-                model = tf.sequential();
-                
-                // 간단한 CNN 모델 (실제로는 더 복잡한 모델이 필요)
-                model.add(tf.layers.conv2d({
-                    inputShape: [224, 224, 3],
-                    filters: 32,
-                    kernelSize: 3,
-                    activation: 'relu',
-                    padding: 'same'
-                }));
-                model.add(tf.layers.maxPooling2d({ poolSize: 2 }));
-                
-                model.add(tf.layers.conv2d({
-                    filters: 64,
-                    kernelSize: 3,
-                    activation: 'relu',
-                    padding: 'same'
-                }));
-                model.add(tf.layers.maxPooling2d({ poolSize: 2 }));
-                
-                model.add(tf.layers.conv2d({
-                    filters: 128,
-                    kernelSize: 3,
-                    activation: 'relu',
-                    padding: 'same'
-                }));
-                model.add(tf.layers.maxPooling2d({ poolSize: 2 }));
-                
-                model.add(tf.layers.flatten());
-                model.add(tf.layers.dense({ units: 128, activation: 'relu' }));
-                model.add(tf.layers.dropout({ rate: 0.5 }));
-                model.add(tf.layers.dense({ units: 6, activation: 'softmax' }));
-                
-                console.log('✅ AI 모델 초기화 완료');
-            } catch (error) {
-                console.error('❌ 모델 초기화 실패:', error);
-            }
-        }
-
+async function initModel() {
+    try {
+        model = await tf.loadLayersModel('./model/model.json');
+        console.log("📌 학습된 모델 로드 완료");
+    } catch (error) {
+        console.error('❌ 모델 로드 실패:', error);
+    }
+}
         // 카메라 시작
         async function startCamera(mode) {
             if (stream) {
